@@ -132,3 +132,57 @@ function volverAlFormulario() {
     // Desplazarse al inicio
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+
+
+// FUNCIÓN: COPIAR RESUMEN AL PORTAPAPELES
+function copiarResumen() {
+    // Obtener el texto del resumen
+    const textoResumen = document.getElementById('resumen-contenido').textContent;
+    
+    // Verificar que hay texto para copiar
+    if (!textoResumen.trim()) {
+        alert('No hay resumen para copiar. Genera el reporte primero.');
+        return;
+    }
+    
+    // Usar la API del portapapeles del navegador
+    navigator.clipboard.writeText(textoResumen)
+        .then(() => {
+            // Éxito: mostrar feedback visual
+            const botonCopiar = document.getElementById('copiar-resumen');
+            const textoOriginal = botonCopiar.textContent;
+            
+            // Cambiar apariencia del botón temporalmente
+            botonCopiar.textContent = '✅ ¡Copiado!';
+            botonCopiar.classList.add('copiado');
+            
+            // Restaurar después de 2 segundos
+            setTimeout(() => {
+                botonCopiar.textContent = textoOriginal;
+                botonCopiar.classList.remove('copiado');
+            }, 2000);
+        })
+        .catch(err => {
+            // Fallback para navegadores antiguos
+            console.error('Error al copiar: ', err);
+            
+            // Método alternativo
+            const areaTemporal = document.createElement('textarea');
+            areaTemporal.value = textoResumen;
+            document.body.appendChild(areaTemporal);
+            areaTemporal.select();
+            document.execCommand('copy');
+            document.body.removeChild(areaTemporal);
+            
+            alert('Resumen copiado al portapapeles');
+        });
+}
+
+// Agregar el event listener cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    const botonCopiar = document.getElementById('copiar-resumen');
+    if (botonCopiar) {
+        botonCopiar.addEventListener('click', copiarResumen);
+    }
+});

@@ -214,3 +214,52 @@ button {
         width: 100%;
     }
 }
+
+/* ============================================= */
+/* ESTILOS PARA EL BOTÓN DE COPIAR */
+/* ============================================= */
+
+.btn-copiar {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-copiar:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-copiar:active {
+    transform: translateY(0);
+}
+
+.btn-copiar.copiado {
+    background-color: #28a745;
+}
+
+.btn-copiar.copiado::before {
+    content: "✅ ";
+}
+
+/* Efecto de feedback visual al copiar */
+@keyframes copiadoAnimacion {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn-copiar.copiado {
+    animation: copiadoAnimacion 0.3s ease;
+}
