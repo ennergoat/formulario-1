@@ -263,3 +263,141 @@ button {
 .btn-copiar.copiado {
     animation: copiadoAnimacion 0.3s ease;
 }
+
+/* ============================================= */
+/* ESTILOS PARA SELECCIÓN DE TAREA */
+/* ============================================= */
+
+.seleccion-tarea {
+    display: none;
+    background-color: white;
+    border-radius: 15px;
+    padding: 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.seleccion-tarea.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+.opciones-tarea {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.opcion-tarea {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.opcion-tarea::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.opcion-tarea:hover::before {
+    left: 100%;
+}
+
+.opcion-tarea:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.icono-tarea {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.opcion-tarea h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.opcion-tarea p {
+    font-size: 16px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+/* ============================================= */
+/* ESTILOS PARA FORMULARIOS DE TAREA */
+/* ============================================= */
+
+.formulario-tarea {
+    display: none;
+}
+
+.formulario-tarea.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Botón para volver al menú */
+.btn-volver-menu {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.btn-volver-menu:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* ============================================= */
+/* ESTILOS PARA BOTÓN VOLVER MEJORADO */
+/* ============================================= */
+
+.btn-volver {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-volver:hover {
+    background: linear-gradient(135deg, #5a6268, #495056);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-volver:active {
+    transform: translateY(0);
+}

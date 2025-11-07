@@ -1,5 +1,93 @@
-// Manejo de campos condicionales
+// =============================================
+// CONFIGURACIÓN INICIAL Y VARIABLES GLOBALES
+// =============================================
+
+let tipoTareaActual = null;
+
+// =============================================
+// INICIALIZACIÓN CUANDO EL DOM ESTÁ LISTO
+// =============================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    inicializarSeleccionTarea();
+    inicializarFormularioCorte();
+    inicializarBotonCopiar();
+    
+    // Mostrar pantalla de selección al cargar
+    mostrarSeleccionTarea();
+});
+
+// =============================================
+// MANEJO DE SELECCIÓN DE TAREA
+// =============================================
+
+function inicializarSeleccionTarea() {
+    const opcionesTarea = document.querySelectorAll('.opcion-tarea');
+    
+    opcionesTarea.forEach(opcion => {
+        opcion.addEventListener('click', function() {
+            const tipoTarea = this.getAttribute('data-tipo');
+            seleccionarTarea(tipoTarea);
+        });
+    });
+}
+
+function seleccionarTarea(tipoTarea) {
+    tipoTareaActual = tipoTarea;
+    
+    // Ocultar selección de tarea
+    document.getElementById('seleccion-tarea').classList.remove('active');
+    
+    // Ocultar todos los formularios
+    document.querySelectorAll('.formulario-tarea').forEach(form => {
+        form.classList.remove('active');
+    });
+    
+    // Ocultar resumen si está visible
+    document.getElementById('resumen').classList.remove('active');
+    
+    // Mostrar formulario correspondiente
+    const formularioId = `formulario-${tipoTarea}`;
+    document.getElementById(formularioId).classList.add('active');
+    
+    // Agregar botón de volver al menú
+    agregarBotonVolverMenu();
+}
+
+function mostrarSeleccionTarea() {
+    // Ocultar todo
+    document.querySelectorAll('.formulario-tarea').forEach(form => {
+        form.classList.remove('active');
+    });
+    document.getElementById('resumen').classList.remove('active');
+    
+    // Mostrar selección
+    document.getElementById('seleccion-tarea').classList.add('active');
+}
+
+function agregarBotonVolverMenu() {
+    // Buscar si ya existe un botón de volver
+    let btnVolver = document.querySelector('.btn-volver-menu');
+    
+    if (!btnVolver) {
+        // Crear botón de volver al menú
+        btnVolver = document.createElement('button');
+        btnVolver.className = 'btn-volver-menu';
+        btnVolver.innerHTML = '← Volver al Menú Principal';
+        btnVolver.onclick = mostrarSeleccionTarea;
+        
+        // Insertar al inicio del contenedor
+        const container = document.querySelector('.container');
+        const firstChild = container.children[1]; // Después del header
+        container.insertBefore(btnVolver, firstChild);
+    }
+}
+
+// =============================================
+// INICIALIZACIÓN DE FORMULARIO DE CORTE
+// =============================================
+
+function inicializarFormularioCorte() {
     // Medidor - mostrar campo de razón si está en mal estado
     document.querySelectorAll('input[name="medidor"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -13,6 +101,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Cajetin - mostrar campo de razón si está en mal estado
+    // document.querySelectorAll('input[name="cajetin"]').forEach(radio => {
+    //     radio.addEventListener('change', function() {
+    //         const razonField = document.getElementById('cajetin-razon');
+    //         if (this.value === 'Mal estado') {
+    //             razonField.classList.add('active');
+    //         } else {
+    //             razonField.classList.remove('active');
+    //         }
+    //     });
+    // });
+
+    // =============================================
+    // MANEJADOR PARA EL CAMPO "CAJETIN" (MODIFICADO)
+    // =============================================
     document.querySelectorAll('input[name="cajetin"]').forEach(radio => {
         radio.addEventListener('change', function() {
             const razonField = document.getElementById('cajetin-razon');
@@ -20,9 +122,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 razonField.classList.add('active');
             } else {
                 razonField.classList.remove('active');
+                // Limpiar selección de tipo de daño cuando se cambia a "Buen estado"
+                document.querySelectorAll('input[name="cajetin_tipo_dano"]').forEach(radioDano => {
+                    radioDano.checked = false;
+                });
             }
         });
     });
+
+
+
     
     // Llave de corte - mostrar campo de razón si está en mal estado
     document.querySelectorAll('input[name="llave_corte"]').forEach(radio => {
@@ -59,9 +168,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
+}
 
-// Generar el resumen con el formato específico
+// =============================================
+// FUNCIÓN PRINCIPAL: GENERAR RESUMEN
+// =============================================
+
+// 
+
+
+// =============================================
+// FUNCIÓN PRINCIPAL: GENERAR RESUMEN (ACTUALIZADA)
+// =============================================
 function generarResumen() {
     // Validar formulario
     if (!document.getElementById('inspeccionForm').checkValidity()) {
@@ -72,102 +190,112 @@ function generarResumen() {
     // Obtener datos del formulario
     const formData = new FormData(document.getElementById('inspeccionForm'));
     
-    // Construir el resumen con el formato exacto solicitado
-    let resumen = `Contrato: ${formData.get('contrato')}, al momento de la inspección se encontró el Servicio App ${formData.get('servicio')}, Medidor ${formData.get('medidor')}`;
+    // Obtener y procesar información de la cuadrilla (NUEVO FORMATO)
+    const cuadrillaCompleta = formData.get('cuadrilla');
+    let supervisor = '';
+    let obrero = '';
     
+    if (cuadrillaCompleta && cuadrillaCompleta !== "Seleccione una cuadrilla") {
+        // Separar supervisor y obrero usando " / " como divisor
+        const partes = cuadrillaCompleta.split(' / ');
+        if (partes.length === 2) {
+            supervisor = partes[0].trim(); // Todo antes del " / " es supervisor
+            obrero = partes[1].trim();     // Todo después del " / " es obrero
+        } else {
+            // Si por alguna razón no se puede separar, usar el valor completo
+            supervisor = cuadrillaCompleta;
+            obrero = "No especificado";
+        }
+    }
+    
+    // Construir el resumen con el nuevo formato
+    let resumen = `Contrato: ${formData.get('contrato')}, la cuadrilla con supervisor: ${supervisor} y obrero: ${obrero}, al momento de la inspección se encontró servicio App ${formData.get('servicio')} medidor ${formData.get('medidor')}`;
+    
+    // El resto del código permanece igual...
     // Agregar razón del medidor si está en mal estado
     if (formData.get('medidor') === 'Mal estado' && formData.get('medidor_razon')) {
         resumen += ` (${formData.get('medidor_razon')})`;
     }
     
-    // Continuar con el resto del formato
-    resumen += `, Lectura ${formData.get('lectura')} M3, Litros ${formData.get('litros')}, Cajetin ${formData.get('cajetin')}`;
+    // CONTINUACIÓN DEL RESUMEN: Lectura, litros y cajetín
+    resumen += `, lectura ${formData.get('lectura')} M3, litros ${formData.get('litros')}, cajetin ${formData.get('cajetin')}`;
     
-    // Agregar razón del cajetin si está en mal estado
-    if (formData.get('cajetin') === 'Mal estado' && formData.get('cajetin_razon')) {
-        resumen += ` (${formData.get('cajetin_razon')})`;
+    // Agregar tipo de daño del cajetín si está en mal estado
+    if (formData.get('cajetin') === 'Mal estado' && formData.get('cajetin_tipo_dano')) {
+        resumen += ` (${formData.get('cajetin_tipo_dano')})`;
     }
     
-    resumen += `, Tipo de llave de corte ${formData.get('tipo_llave')}, Llave de corte ${formData.get('llave_corte')},`;
+    resumen += `, Tipo de llave de corte ${formData.get('tipo_llave')}, llave de corte ${formData.get('llave_corte')}`;
     
     // Agregar razón de llave de corte si está en mal estado
     if (formData.get('llave_corte') === 'Mal estado' && formData.get('llave_corte_razon')) {
         resumen += ` (${formData.get('llave_corte_razon')})`;
     }
     
-    resumen += ` Llave de paso ${formData.get('llave_paso')}`;
+    resumen += ` llave de paso ${formData.get('llave_paso')}`;
     
     // Agregar razón de llave de paso si está en mal estado
     if (formData.get('llave_paso') === 'Mal estado' && formData.get('llave_paso_razon')) {
         resumen += ` (${formData.get('llave_paso_razon')})`;
     }
     
-    resumen += `, Medio nudo ${formData.get('medio_nudo')}`;
+    resumen += `, medio nudo ${formData.get('medio_nudo')}`;
     
     // Agregar tipo de accesorio si no tiene medio nudo
     if (formData.get('medio_nudo') === 'No' && formData.get('medio_nudo_accesorio')) {
         resumen += ` (${formData.get('medio_nudo_accesorio')})`;
     }
     
-    resumen += `, se procede a realizar corte del servicio ${formData.get('corte')}, Predio ${formData.get('predio')}, Color ${formData.get('color')}, Perno ${formData.get('perno')}`;
+    resumen += `, se procede a realizar corte del servicio ${formData.get('corte')}, predio ${formData.get('predio')}, color ${formData.get('color')}, perno ${formData.get('perno')}`;
     
     // Mostrar el resumen
     document.getElementById('resumen-contenido').textContent = resumen;
     document.getElementById('resumen').classList.add('active');
     
     // Desplazarse al resumen
-    document.getElementById('resumen').scrollIntoView({ behavior: 'smooth' });
-}
-
-// Volver al formulario
-function volverAlFormulario() {
-    document.getElementById('resumen').classList.remove('active');
-    document.getElementById('inspeccionForm').reset();
-    
-    // Ocultar todos los campos condicionales
-    document.querySelectorAll('.conditional-field').forEach(field => {
-        field.classList.remove('active');
+    document.getElementById('resumen').scrollIntoView({ 
+        behavior: 'smooth'
     });
-    
-    // Desplazarse al inicio
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 
 
+
+
+// =============================================
 // FUNCIÓN: COPIAR RESUMEN AL PORTAPAPELES
+// =============================================
+
+function inicializarBotonCopiar() {
+    const botonCopiar = document.getElementById('copiar-resumen');
+    if (botonCopiar) {
+        botonCopiar.addEventListener('click', copiarResumen);
+    }
+}
+
 function copiarResumen() {
-    // Obtener el texto del resumen
     const textoResumen = document.getElementById('resumen-contenido').textContent;
     
-    // Verificar que hay texto para copiar
     if (!textoResumen.trim()) {
         alert('No hay resumen para copiar. Genera el reporte primero.');
         return;
     }
     
-    // Usar la API del portapapeles del navegador
     navigator.clipboard.writeText(textoResumen)
         .then(() => {
-            // Éxito: mostrar feedback visual
             const botonCopiar = document.getElementById('copiar-resumen');
             const textoOriginal = botonCopiar.textContent;
             
-            // Cambiar apariencia del botón temporalmente
             botonCopiar.textContent = '✅ ¡Copiado!';
             botonCopiar.classList.add('copiado');
             
-            // Restaurar después de 2 segundos
             setTimeout(() => {
                 botonCopiar.textContent = textoOriginal;
                 botonCopiar.classList.remove('copiado');
             }, 2000);
         })
         .catch(err => {
-            // Fallback para navegadores antiguos
             console.error('Error al copiar: ', err);
-            
-            // Método alternativo
             const areaTemporal = document.createElement('textarea');
             areaTemporal.value = textoResumen;
             document.body.appendChild(areaTemporal);
@@ -179,10 +307,26 @@ function copiarResumen() {
         });
 }
 
-// Agregar el event listener cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    const botonCopiar = document.getElementById('copiar-resumen');
-    if (botonCopiar) {
-        botonCopiar.addEventListener('click', copiarResumen);
+// =============================================
+// FUNCIÓN: VOLVER AL MENÚ PRINCIPAL
+// =============================================
+
+function volverAlMenu() {
+    // Ocultar resumen
+    document.getElementById('resumen').classList.remove('active');
+    
+    // Mostrar selección de tarea
+    mostrarSeleccionTarea();
+    
+    // Remover botón de volver si existe
+    const btnVolver = document.querySelector('.btn-volver-menu');
+    if (btnVolver) {
+        btnVolver.remove();
     }
-});
+    
+    // Desplazarse al inicio
+    window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' 
+    });
+}
