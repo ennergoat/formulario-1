@@ -401,3 +401,16 @@ button {
 .btn-volver:active {
     transform: translateY(0);
 }
+
+/* ============================================= */
+/* ESTILOS PARA RESUMEN GLOBAL */
+/* ============================================= */
+
+.resumen-global {
+    display: none;
+}
+
+.resumen-global.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
