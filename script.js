@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM cargado - Inicializando aplicación...');
     inicializarSeleccionTarea();
     inicializarFormularioCorte();
+    inicializarFormularioReconexion();
     inicializarBotonCopiar();
     
     // Mostrar pantalla de selección al cargar
@@ -58,6 +59,8 @@ function seleccionarTarea(tipoTarea) {
         // Inicializar formularios específicos cuando se muestran
         if (tipoTarea === 'reconexion') {
             inicializarFormularioReconexion();
+        } else if (tipoTarea === 'verificacion') {
+            inicializarFormularioVerificacion(); 
         }
     }
     
@@ -417,6 +420,232 @@ function generarResumenReconexion() {
     // Mostrar el resumen
     mostrarResumenGenerado(resumen);
 }
+
+
+// =============================================
+// INICIALIZACIÓN DEL FORMULARIO DE VERIFICACIÓN
+// =============================================
+
+function inicializarFormularioVerificacion() {
+    console.log('Inicializando formulario de verificación...');
+    
+    // Campos condicionales básicos (medidor, cajetín, etc.)
+    inicializarCamposCondicionalesVerificacion();
+    
+    // Lógica específica de verificación de corte
+    const verificacionRadios = document.querySelectorAll('#formulario-verificacion input[name="verificacion"]');
+    verificacionRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            manejarSeleccionVerificacion(this.value);
+        });
+    });
+    
+    // Lógica para "Predio habitado, usuario presente"
+    const cortadoOpcionRadios = document.querySelectorAll('#formulario-verificacion input[name="cortado_opcion"]');
+    cortadoOpcionRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'Predio habitado, usuario presente') {
+                document.getElementById('abastecimiento-field').classList.add('active');
+            } else {
+                document.getElementById('abastecimiento-field').classList.remove('active');
+            }
+        });
+    });
+    
+    console.log('Formulario de verificación inicializado correctamente');
+}
+
+function inicializarCamposCondicionalesVerificacion() {
+    // Medidor - mostrar campo de razón si está en mal estado
+    document.querySelectorAll('#formulario-verificacion input[name="medidor"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('medidor-razon-verificacion');
+            if (this.value === 'Mal estado') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+            }
+        });
+    });
+    
+    // Cajetin - mostrar campo de razón si está en mal estado
+    document.querySelectorAll('#formulario-verificacion input[name="cajetin"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('cajetin-razon-verificacion');
+            if (this.value === 'Mal estado') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+                document.querySelectorAll('#formulario-verificacion input[name="cajetin_tipo_dano"]').forEach(radioDano => {
+                    radioDano.checked = false;
+                });
+            }
+        });
+    });
+    
+    // Llave de corte - mostrar campo de razón si está en mal estado
+    document.querySelectorAll('#formulario-verificacion input[name="llave_corte"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('llave-corte-razon-verificacion');
+            if (this.value === 'Mal estado') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+            }
+        });
+    });
+    
+    // Llave de paso - mostrar campo de razón si está en mal estado
+    document.querySelectorAll('#formulario-verificacion input[name="llave_paso"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('llave-paso-razon-verificacion');
+            if (this.value === 'Mal estado') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+            }
+        });
+    });
+    
+    // Medio nudo - mostrar campo de accesorio si es "No"
+    document.querySelectorAll('#formulario-verificacion input[name="medio_nudo"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const accesorioField = document.getElementById('medio-nudo-accesorio-verificacion');
+            if (this.value === 'No') {
+                accesorioField.classList.add('active');
+            } else {
+                accesorioField.classList.remove('active');
+            }
+        });
+    });
+}
+
+function manejarSeleccionVerificacion(valor) {
+    // Ocultar todos los campos condicionales primero
+    document.getElementById('cortado-opciones').classList.remove('active');
+    document.getElementById('reconectado-opciones').classList.remove('active');
+    document.getElementById('abastecimiento-field').classList.remove('active');
+    
+    // Limpiar selecciones cuando se cambia la opción principal
+    document.querySelectorAll('#formulario-verificacion input[name="cortado_opcion"]').forEach(radio => {
+        radio.checked = false;
+    });
+    document.querySelectorAll('#formulario-verificacion input[name="reconectado_opcion"]').forEach(radio => {
+        radio.checked = false;
+    });
+    
+    // Mostrar el campo condicional correspondiente
+    if (valor === 'se encontró cortado') {
+        document.getElementById('cortado-opciones').classList.add('active');
+    } else if (valor === 'se encontró reconectado') {
+        document.getElementById('reconectado-opciones').classList.add('active');
+    }
+    // Para "se encontró posible fraude" no mostramos campos adicionales
+}
+
+// =============================================
+// FUNCIÓN: GENERAR RESUMEN DE VERIFICACIÓN
+// =============================================
+
+function generarResumenVerificacion() {
+    console.log('Generando resumen de verificación...');
+    
+    const formulario = document.getElementById('inspeccionFormVerificacion');
+    
+    // Validar formulario
+    if (!formulario.checkValidity()) {
+        alert('Por favor, complete todos los campos requeridos');
+        formulario.reportValidity();
+        return;
+    }
+    
+    // Obtener datos del formulario
+    const formData = new FormData(formulario);
+    
+    // Obtener y procesar información de la cuadrilla
+    const cuadrillaCompleta = formData.get('cuadrilla');
+    let supervisor = '';
+    let obrero = '';
+    
+    if (cuadrillaCompleta && cuadrillaCompleta !== "Seleccione una cuadrilla") {
+        const partes = cuadrillaCompleta.split(' / ');
+        if (partes.length === 2) {
+            supervisor = partes[0].trim();
+            obrero = partes[1].trim();
+        } else {
+            supervisor = cuadrillaCompleta;
+            obrero = "No especificado";
+        }
+    }
+    
+    // Construir el resumen base
+    let resumen = `Contrato: ${formData.get('contrato')}, la cuadrilla con supervisor: ${supervisor} y obrero: ${obrero}, al momento de la inspección se encontró el Servicio App ${formData.get('servicio')}, Medidor ${formData.get('medidor')}`;
+    
+    // Agregar razón del medidor si está en mal estado
+    if (formData.get('medidor') === 'Mal estado' && formData.get('medidor_razon')) {
+        resumen += ` (${formData.get('medidor_razon')})`;
+    }
+    
+    resumen += `, Lectura ${formData.get('lectura')} M3, Litros ${formData.get('litros')}, Cajetin ${formData.get('cajetin')}`;
+    
+    // Agregar tipo de daño del cajetín si está en mal estado
+    if (formData.get('cajetin') === 'Mal estado' && formData.get('cajetin_tipo_dano')) {
+        resumen += ` (${formData.get('cajetin_tipo_dano')})`;
+    }
+    
+    resumen += `, Tipo de llave de corte ${formData.get('tipo_llave')}, Llave de corte ${formData.get('llave_corte')}`;
+    
+    // Agregar razón de llave de corte si está en mal estado
+    if (formData.get('llave_corte') === 'Mal estado' && formData.get('llave_corte_razon')) {
+        resumen += ` (${formData.get('llave_corte_razon')})`;
+    }
+    
+    resumen += `, Llave de paso ${formData.get('llave_paso')}`;
+    
+    // Agregar razón de llave de paso si está en mal estado
+    if (formData.get('llave_paso') === 'Mal estado' && formData.get('llave_paso_razon')) {
+        resumen += ` (${formData.get('llave_paso_razon')})`;
+    }
+    
+    resumen += `, Medio nudo ${formData.get('medio_nudo')}`;
+    
+    // Agregar tipo de accesorio si no tiene medio nudo
+    if (formData.get('medio_nudo') === 'No' && formData.get('medio_nudo_accesorio')) {
+        resumen += ` (${formData.get('medio_nudo_accesorio')})`;
+    }
+    
+    // Parte específica de verificación con las variantes
+    const tipoVerificacion = formData.get('verificacion');
+    let detalleVerificacion = '';
+    
+    if (tipoVerificacion === 'se encontró cortado') {
+        const cortadoOpcion = formData.get('cortado_opcion');
+        detalleVerificacion = `se encontró cortado (${cortadoOpcion}`;
+        
+        // Si es "Predio habitado, usuario presente" y tiene información de abastecimiento
+        if (cortadoOpcion === 'Predio habitado, usuario presente' && formData.get('abastecimiento')) {
+            detalleVerificacion += `, ${formData.get('abastecimiento')}`;
+        }
+        
+        detalleVerificacion += ')';
+        
+    } else if (tipoVerificacion === 'se encontró reconectado') {
+        const reconectadoOpcion = formData.get('reconectado_opcion');
+        detalleVerificacion = `se encontró reconectado (${reconectadoOpcion})`;
+        
+    } else if (tipoVerificacion === 'se encontró posible fraude') {
+        detalleVerificacion = 'se encontró posible fraude';
+    }
+    
+    resumen += `, se procedió a realizar la verificación del corte en donde ${detalleVerificacion}`;
+    
+    resumen += `, Predio ${formData.get('predio')}, Color ${formData.get('color')}, Perno ${formData.get('perno')}`;
+    
+    // Mostrar el resumen
+    mostrarResumenGenerado(resumen);
+}
+
+
 
 // =============================================
 // FUNCIÓN COMÚN: MOSTRAR RESUMEN GENERADO
