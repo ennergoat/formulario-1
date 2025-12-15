@@ -57,22 +57,16 @@
                             <label for="cuadrilla" class="required">Nombre de la cuadrilla</label>
                             <select id="cuadrilla" name="cuadrilla" required>
                                 <option value="">Seleccione una cuadrilla</option>
-                                <option value="Bryan Josue Ligorguro Guaman / Peter Jahir Carranza Bravo">Bryan Josue
-                                    Ligorguro Guaman / Peter Jahir Carranza Bravo</option>
-                                <option value="Gilson Alberto Marcillo Alvarado / Jose Alejandro Bravo Vargas">Gilson
-                                    Alberto Marcillo Alvarado / Jose Alejandro Bravo Vargas</option>
-                                <option value="Ruffo Moises Garcia Simisterra / Christian Joe Briones Jurado">Ruffo
-                                    Moises Garcia Simisterra / Christian Joe Briones Jurado</option>
-                                <option value="Moises Alberto Moran Tomala / Erick Josue Yagual Gonzalez">Moises Alberto
-                                    Moran Tomala / Erick Josue Yagual Gonzalez</option>
-                                <option value="Rodolfo Andres Guerrero Fernandez / Camilo Fernando Landin Quiñonez">
-                                    Rodolfo Andres Guerrero Fernandez / Camilo Fernando Landin Quiñonez</option>
-                                <option value="Mario Anthony Perez Rodriguez / Richard Alex Tigua Plua">Mario Anthony
-                                    Perez Rodriguez / Richard Alex Tigua Plua</option>
-                                <option value="Christian Martinez Valverde / Gilson Alberto Marcillo Alvarado">Christian
-                                    Martinez Valverde / Gilson Alberto Marcillo Alvarado</option>
-                                <option value="Josue Augusto Espinoza Sanchez / Jose Alberto Cabrera Silva">Josue
-                                    Augusto Espinoza Sanchez / Jose Alberto Cabrera Silva</option>
+                                <option value="RODOLFO ANDRES GUERRERO FERNANDEZ / MICHAEL ANDRES ARIAS SOLORZANO">RODOLFO ANDRES GUERRERO FERNANDEZ / MICHAEL ANDRES ARIAS SOLORZANO</option>
+                                <option value="ALLAN PETER BARREZUETA CARBO / KEVIN JAVIER ZHUNIO CHELE">ALLAN PETER BARREZUETA CARBO / KEVIN JAVIER ZHUNIO CHELE</option>
+                                <option value="GILSON ALBERTO MARCILLO ALVARADO / JOSE ALEJANDRO BRAVO VARGAS">GILSON ALBERTO MARCILLO ALVARADO / JOSE ALEJANDRO BRAVO VARGAS</option>
+                                <option value="JOSE ALBERTO CABRERA SILVA / JOSUE AUGUSTO ESPINOZA SANCHEZ">JOSE ALBERTO CABRERA SILVA / JOSUE AUGUSTO ESPINOZA SANCHEZ</option>
+                                <option value="ANGELLO ISRAEL ZUÑIGA CAJAPE / CARLOS ANDRES COFRE VALVERDE">ANGELLO ISRAEL ZUÑIGA CAJAPE / CARLOS ANDRES COFRE VALVERDE</option>
+                                <option value="BRYAN JOSUE LIGORGURO GUAMAN / PETER JAHIR CARRANZA BRAVO">BRYAN JOSUE LIGORGURO GUAMAN / PETER JAHIR CARRANZA BRAVO</option>
+                                <option value="CHRISTIAN MARTINEZ VALVERDE / EDISON ALEX ORDOÑEZ LUCANO">CHRISTIAN MARTINEZ VALVERDE / EDISON ALEX ORDOÑEZ LUCANO</option>
+                                <option value="ERICK JOSUE YAGUAL GONZALEZ / CAMILO FERNANDO LANDIN QUIÑONEZ">ERICK JOSUE YAGUAL GONZALEZ / CAMILO FERNANDO LANDIN QUIÑONEZ</option>
+                                <option value="KEVIN MONTENEGRO / ELIAS RODRIGUEZ">KEVIN MONTENEGRO / ELIAS RODRIGUEZ</option>
+                                <option value="RICHARD ALEX TIGUA PLUA / MARIO ANTHONY PEREZ RODRIGUEZ">RICHARD ALEX TIGUA PLUA / MARIO ANTHONY PEREZ RODRIGUEZ</option>
                             </select>
                         </div>
 
@@ -140,10 +134,9 @@
                             <div id="cajetin-razon" class="conditional-field">
                                 <label class="required">Seleccione el tipo de daño:</label>
                                 <div class="radio-group">
-                                    <label><input type="radio" name="cajetin_tipo_dano" value="tapa dañada sin visor">
-                                        Tapa dañada sin visor</label>
-                                    <label><input type="radio" name="cajetin_tipo_dano" value="cajetin roto"> Cajetín
-                                        roto</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="tapa dañada sin visor"> Tapa dañada sin visor</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="cajetin roto"> Cajetín roto</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="sin tapa"> Sin tapa</label>
                                 </div>
                             </div>
                         </div>
@@ -238,10 +231,31 @@
                             <div class="radio-group">
                                 <label><input type="radio" name="perno" value="Se instala" required> Se instala</label>
                                 <label><input type="radio" name="perno" value="Se ajusta" required> Se ajusta</label>
-                                <label><input type="radio" name="perno" value="No tiene" required> No tiene</label>
+                                <label><input type="radio" name="perno" value="No se coloca" required> No se coloca</label>
+                            </div>
+                            <div id="perno-razon" class="conditional-field">
+                                <label class="required">Seleccione la razón:</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="perno_razon" value="no hay en stock"> No hay en stock</label>
+                                    <label><input type="radio" name="perno_razon" value="tapa dañada"> Tapa dañada</label>
+                                    <label><input type="radio" name="perno_razon" value="No se puede ajustar perno"> No se puede ajustar perno</label>
+                                </div>
                             </div>
                         </div>
+
                     </div>
+
+
+                    <div class="form-section">
+                        <h2>Observación Final</h2>
+                        <div class="form-group">
+                            
+                            <textarea id="observacion" name="observacion" rows="3" placeholder="Escriba cualquier observación adicional"></textarea>
+                        </div>
+                    </div>
+
+
+
 
                     <div class="buttons">
                         <button type="button" class="btn-submit" onclick="generarResumen()">Generar Reporte de
@@ -269,25 +283,21 @@
 
                         <div class="form-group">
                             <label for="cuadrilla-reconexion" class="required">Nombre de la cuadrilla</label>
-                            <select id="cuadrilla-reconexion" name="cuadrilla" required>
+
+                            <select id="cuadrilla" name="cuadrilla" required>
                                 <option value="">Seleccione una cuadrilla</option>
-                                <option value="Bryan Josue Ligorguro Guaman / Peter Jahir Carranza Bravo">Bryan
-                                    Josue Ligorguro Guaman / Peter Jahir Carranza Bravo</option>
-                                <option value="Gilson Alberto Marcillo Alvarado / Jose Alejandro Bravo Vargas">
-                                    Gilson Alberto Marcillo Alvarado / Jose Alejandro Bravo Vargas</option>
-                                <option value="Ruffo Moises Garcia Simisterra / Christian Joe Briones Jurado">Ruffo
-                                    Moises Garcia Simisterra / Christian Joe Briones Jurado</option>
-                                <option value="Moises Alberto Moran Tomala / Erick Josue Yagual Gonzalez">Moises
-                                    Alberto Moran Tomala / Erick Josue Yagual Gonzalez</option>
-                                <option value="Rodolfo Andres Guerrero Fernandez / Camilo Fernando Landin Quiñonez">
-                                    Rodolfo Andres Guerrero Fernandez / Camilo Fernando Landin Quiñonez</option>
-                                <option value="Mario Anthony Perez Rodriguez / Richard Alex Tigua Plua">Mario
-                                    Anthony Perez Rodriguez / Richard Alex Tigua Plua</option>
-                                <option value="Christian Martinez Valverde / Gilson Alberto Marcillo Alvarado">
-                                    Christian Martinez Valverde / Gilson Alberto Marcillo Alvarado</option>
-                                <option value="Josue Augusto Espinoza Sanchez / Jose Alberto Cabrera Silva">Josue
-                                    Augusto Espinoza Sanchez / Jose Alberto Cabrera Silva</option>
+                                <option value="RODOLFO ANDRES GUERRERO FERNANDEZ / MICHAEL ANDRES ARIAS SOLORZANO">RODOLFO ANDRES GUERRERO FERNANDEZ / MICHAEL ANDRES ARIAS SOLORZANO</option>
+                                <option value="ALLAN PETER BARREZUETA CARBO / KEVIN JAVIER ZHUNIO CHELE">ALLAN PETER BARREZUETA CARBO / KEVIN JAVIER ZHUNIO CHELE</option>
+                                <option value="GILSON ALBERTO MARCILLO ALVARADO / JOSE ALEJANDRO BRAVO VARGAS">GILSON ALBERTO MARCILLO ALVARADO / JOSE ALEJANDRO BRAVO VARGAS</option>
+                                <option value="JOSE ALBERTO CABRERA SILVA / JOSUE AUGUSTO ESPINOZA SANCHEZ">JOSE ALBERTO CABRERA SILVA / JOSUE AUGUSTO ESPINOZA SANCHEZ</option>
+                                <option value="ANGELLO ISRAEL ZUÑIGA CAJAPE / CARLOS ANDRES COFRE VALVERDE">ANGELLO ISRAEL ZUÑIGA CAJAPE / CARLOS ANDRES COFRE VALVERDE</option>
+                                <option value="BRYAN JOSUE LIGORGURO GUAMAN / PETER JAHIR CARRANZA BRAVO">BRYAN JOSUE LIGORGURO GUAMAN / PETER JAHIR CARRANZA BRAVO</option>
+                                <option value="CHRISTIAN MARTINEZ VALVERDE / EDISON ALEX ORDOÑEZ LUCANO">CHRISTIAN MARTINEZ VALVERDE / EDISON ALEX ORDOÑEZ LUCANO</option>
+                                <option value="ERICK JOSUE YAGUAL GONZALEZ / CAMILO FERNANDO LANDIN QUIÑONEZ">ERICK JOSUE YAGUAL GONZALEZ / CAMILO FERNANDO LANDIN QUIÑONEZ</option>
+                                <option value="KEVIN MONTENEGRO / ELIAS RODRIGUEZ">KEVIN MONTENEGRO / ELIAS RODRIGUEZ</option>
+                                <option value="RICHARD ALEX TIGUA PLUA / MARIO ANTHONY PEREZ RODRIGUEZ">RICHARD ALEX TIGUA PLUA / MARIO ANTHONY PEREZ RODRIGUEZ</option>
                             </select>
+
                         </div>
 
                         <div class="form-group">
@@ -354,12 +364,11 @@
                             <div id="cajetin-razon-reconexion" class="conditional-field">
                                 <label class="required">Seleccione el tipo de daño:</label>
                                 <div class="radio-group">
-                                    <label><input type="radio" name="cajetin_tipo_dano"
-                                            value="tapa dañada sin visor"> Tapa dañada sin visor</label>
-                                    <label><input type="radio" name="cajetin_tipo_dano" value="cajetin roto">
-                                        Cajetín roto</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="tapa dañada sin visor"> Tapa dañada sin visor</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="cajetin roto"> Cajetín roto</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="sin tapa"> Sin tapa</label>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
 
                         <div class="form-group">
@@ -457,14 +466,33 @@
                         <div class="form-group">
                             <label class="required">Perno</label>
                             <div class="radio-group">
-                                <label><input type="radio" name="perno" value="Se instala" required> Se
-                                    instala</label>
-                                <label><input type="radio" name="perno" value="Se ajusta" required> Se
-                                    ajusta</label>
-                                <label><input type="radio" name="perno" value="No tiene" required> No tiene</label>
+                                <label><input type="radio" name="perno" value="Se instala" required> Se instala</label>
+                                <label><input type="radio" name="perno" value="Se ajusta" required> Se ajusta</label>
+                                <label><input type="radio" name="perno" value="No se coloca" required> No se coloca</label>
                             </div>
+                            <div id="perno-razon-reconexion" class="conditional-field">
+                                <label class="required">Seleccione la razón:</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="perno_razon" value="no hay en stock"> No hay en stock</label>
+                                    <label><input type="radio" name="perno_razon" value="tapa dañada"> Tapa dañada</label>
+                                    <label><input type="radio" name="perno_razon" value="No se puede ajustar perno"> No se puede ajustar perno</label>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+
+
+
+                    <div class="form-section">
+                        <h2>Observación Final</h2>
+                        <div class="form-group">
+                            
+                            <textarea id="observacion-reconexion" name="observacion" rows="3" placeholder="Escriba cualquier observación adicional"></textarea>
                         </div>
                     </div>
+
+
+
 
                     <div class="buttons">
                         <button type="button" class="btn-submit" onclick="generarResumenReconexion()">Generar
@@ -494,17 +522,21 @@
                         
                         <div class="form-group">
                             <label for="cuadrilla-verificacion" class="required">Nombre de la cuadrilla</label>
-                            <select id="cuadrilla-verificacion" name="cuadrilla" required>
+
+                            <select id="cuadrilla" name="cuadrilla" required>
                                 <option value="">Seleccione una cuadrilla</option>
-                                <option value="Bryan Josue Ligorguro Guaman / Peter Jahir Carranza Bravo">Bryan Josue Ligorguro Guaman / Peter Jahir Carranza Bravo</option>
-                                <option value="Gilson Alberto Marcillo Alvarado / Jose Alejandro Bravo Vargas">Gilson Alberto Marcillo Alvarado / Jose Alejandro Bravo Vargas</option>
-                                <option value="Ruffo Moises Garcia Simisterra / Christian Joe Briones Jurado">Ruffo Moises Garcia Simisterra / Christian Joe Briones Jurado</option>
-                                <option value="Moises Alberto Moran Tomala / Erick Josue Yagual Gonzalez">Moises Alberto Moran Tomala / Erick Josue Yagual Gonzalez</option>
-                                <option value="Rodolfo Andres Guerrero Fernandez / Camilo Fernando Landin Quiñonez">Rodolfo Andres Guerrero Fernandez / Camilo Fernando Landin Quiñonez</option>
-                                <option value="Mario Anthony Perez Rodriguez / Richard Alex Tigua Plua">Mario Anthony Perez Rodriguez / Richard Alex Tigua Plua</option>
-                                <option value="Christian Martinez Valverde / Gilson Alberto Marcillo Alvarado">Christian Martinez Valverde / Gilson Alberto Marcillo Alvarado</option>
-                                <option value="Josue Augusto Espinoza Sanchez / Jose Alberto Cabrera Silva">Josue Augusto Espinoza Sanchez / Jose Alberto Cabrera Silva</option>
+                                <option value="RODOLFO ANDRES GUERRERO FERNANDEZ / MICHAEL ANDRES ARIAS SOLORZANO">RODOLFO ANDRES GUERRERO FERNANDEZ / MICHAEL ANDRES ARIAS SOLORZANO</option>
+                                <option value="ALLAN PETER BARREZUETA CARBO / KEVIN JAVIER ZHUNIO CHELE">ALLAN PETER BARREZUETA CARBO / KEVIN JAVIER ZHUNIO CHELE</option>
+                                <option value="GILSON ALBERTO MARCILLO ALVARADO / JOSE ALEJANDRO BRAVO VARGAS">GILSON ALBERTO MARCILLO ALVARADO / JOSE ALEJANDRO BRAVO VARGAS</option>
+                                <option value="JOSE ALBERTO CABRERA SILVA / JOSUE AUGUSTO ESPINOZA SANCHEZ">JOSE ALBERTO CABRERA SILVA / JOSUE AUGUSTO ESPINOZA SANCHEZ</option>
+                                <option value="ANGELLO ISRAEL ZUÑIGA CAJAPE / CARLOS ANDRES COFRE VALVERDE">ANGELLO ISRAEL ZUÑIGA CAJAPE / CARLOS ANDRES COFRE VALVERDE</option>
+                                <option value="BRYAN JOSUE LIGORGURO GUAMAN / PETER JAHIR CARRANZA BRAVO">BRYAN JOSUE LIGORGURO GUAMAN / PETER JAHIR CARRANZA BRAVO</option>
+                                <option value="CHRISTIAN MARTINEZ VALVERDE / EDISON ALEX ORDOÑEZ LUCANO">CHRISTIAN MARTINEZ VALVERDE / EDISON ALEX ORDOÑEZ LUCANO</option>
+                                <option value="ERICK JOSUE YAGUAL GONZALEZ / CAMILO FERNANDO LANDIN QUIÑONEZ">ERICK JOSUE YAGUAL GONZALEZ / CAMILO FERNANDO LANDIN QUIÑONEZ</option>
+                                <option value="KEVIN MONTENEGRO / ELIAS RODRIGUEZ">KEVIN MONTENEGRO / ELIAS RODRIGUEZ</option>
+                                <option value="RICHARD ALEX TIGUA PLUA / MARIO ANTHONY PEREZ RODRIGUEZ">RICHARD ALEX TIGUA PLUA / MARIO ANTHONY PEREZ RODRIGUEZ</option>
                             </select>
+            
                         </div>
                         
                         <div class="form-group">
@@ -557,14 +589,16 @@
                                 <label><input type="radio" name="cajetin" value="Buen estado" required> Buen estado</label>
                                 <label><input type="radio" name="cajetin" value="Mal estado" required> Mal estado</label>
                             </div>
-                            
+
                             <div id="cajetin-razon-verificacion" class="conditional-field">
                                 <label class="required">Seleccione el tipo de daño:</label>
                                 <div class="radio-group">
                                     <label><input type="radio" name="cajetin_tipo_dano" value="tapa dañada sin visor"> Tapa dañada sin visor</label>
                                     <label><input type="radio" name="cajetin_tipo_dano" value="cajetin roto"> Cajetín roto</label>
+                                    <label><input type="radio" name="cajetin_tipo_dano" value="sin tapa"> Sin tapa</label>
                                 </div>
-                            </div>
+                            </div>                           
+                            
                         </div>
 
                         <div class="form-group">
@@ -636,11 +670,12 @@
                                     <!-- Campo condicional para "Predio habitado, usuario presente" -->
                                     <div id="abastecimiento-field" class="conditional-field">
                                         <div class="form-group">
-                                            <label for="abastecimiento-text" class="required">¿Cómo se abastece?</label>
+                                            <label for="abastecimiento-text">¿Cómo se abastece? (opcional)</label>
                                             <input type="text" id="abastecimiento-text" name="abastecimiento" placeholder="Describa cómo se abastece el usuario">
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <label><input type="radio" name="verificacion" value="se encontró reconectado" required> Se encontró reconectado</label>
                                 <!-- Campo condicional para "se encontró reconectado" -->
                                 <div id="reconectado-opciones" class="conditional-field">
@@ -648,14 +683,28 @@
                                         <label class="required">Seleccione el tipo de corte:</label>
                                         <div class="radio-group">
                                             <label><input type="radio" name="reconectado_opcion" value="Corte con dispositivo en llave"> Corte con dispositivo en llave</label>
-                                            <label><input type="radio" name="reconectado_opcion" value="Corte en guía con dispositivo a 0.7 m hacia la matriz"> Corte en guía con dispositivo a 0.7 m hacia la matriz</label>
-                                            <label><input type="radio" name="reconectado_opcion" value="Corte con rotura 40x40 dispositivo en guía"> Corte con rotura 40x40 dispositivo en guía</label>
+                                            <label><input type="radio" name="reconectado_opcion" value="Corte en guía con dispositivo"> Corte en guía con dispositivo</label>
+                                            <label>
+                                                <input type="radio" name="reconectado_opcion" value="Corte con rotura" id="corte-con-rotura"> Corte con rotura
+                                                <input type="text" id="rotura-medida" placeholder="ej: 40x40" style="margin-left: 10px; width: 100px; display: none;"> dispositivo en guía
+                                            </label>
+                                            <label><input type="radio" name="reconectado_opcion" value="Corte con ficha y llave trabada"> Corte con ficha y llave trabada</label>
+                                            <label><input type="radio" name="reconectado_opcion" value="Se deriva para carro"> Se deriva para carro</label>
                                         </div>
                                     </div>
                                 </div>
-
-
+                                
                                 <label><input type="radio" name="verificacion" value="se encontró posible fraude" required> Se encontró posible fraude</label>
+                                <!-- Campo condicional para "se encontró posible fraude" -->
+                                <div id="fraude-opciones" class="conditional-field">
+                                    <div class="form-group">
+                                        <label class="required">Derivar inspección para carro</label>
+                                        <div class="form-group">
+                                            <label for="fraude-detalle" class="required">Especifique el posible fraude:</label>
+                                            <input type="text" id="fraude-detalle" name="fraude_detalle" placeholder="Describa el posible fraude">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -688,16 +737,35 @@
                             <label for="color-verificacion" class="required">Color</label>
                             <input type="text" id="color-verificacion" name="color" required placeholder="Ingrese el color">
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="required">Perno</label>
                             <div class="radio-group">
                                 <label><input type="radio" name="perno" value="Se instala" required> Se instala</label>
                                 <label><input type="radio" name="perno" value="Se ajusta" required> Se ajusta</label>
-                                <label><input type="radio" name="perno" value="No tiene" required> No tiene</label>
+                                <label><input type="radio" name="perno" value="No se coloca" required> No se coloca</label>
                             </div>
+                            <div id="perno-razon-verificacion" class="conditional-field">
+                                <label class="required">Seleccione la razón:</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="perno_razon" value="no hay en stock"> No hay en stock</label>
+                                    <label><input type="radio" name="perno_razon" value="tapa dañada"> Tapa dañada</label>
+                                    <label><input type="radio" name="perno_razon" value="No se puede ajustar perno"> No se puede ajustar perno</label>
+                                </div>
+                            </div>
+                        </div>                      
+                    </div>
+
+
+                    <div class="form-section">
+                        <h2>Observación Final</h2>
+                        <div class="form-group">
+                           
+                            <textarea id="observacion-verificacion" name="observacion" rows="3" placeholder="Escriba cualquier observación adicional"></textarea>
                         </div>
                     </div>
+
+
                     
                     <div class="buttons">
                         <button type="button" class="btn-submit" onclick="generarResumenVerificacion()">Generar Reporte de Verificación</button>

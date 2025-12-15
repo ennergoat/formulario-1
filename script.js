@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     inicializarSeleccionTarea();
     inicializarFormularioCorte();
     inicializarFormularioReconexion();
+    inicializarPerno();
     inicializarBotonCopiar();
     
     // Mostrar pantalla de selección al cargar
@@ -332,14 +333,25 @@ function generarResumen() {
     
     resumen += `, se procede a realizar corte del servicio ${formData.get('corte')}, predio ${formData.get('predio')}, color ${formData.get('color')}, perno ${formData.get('perno')}`;
     
+    // Agregar razón del perno si es "No se coloca"
+    if (formData.get('perno') === 'No se coloca' && formData.get('perno_razon')) {
+        resumen += ` (${formData.get('perno_razon')})`;
+    }
+    
+    // Agregar observación final si existe
+    const observacion = formData.get('observacion');
+    if (observacion && observacion.trim() !== '') {
+        resumen += `, Observación: ${observacion}`;
+    }
+    
     // Mostrar el resumen
     mostrarResumenGenerado(resumen);
 }
 
+
 // =============================================
 // FUNCIÓN: GENERAR RESUMEN DE RECONEXIÓN
 // =============================================
-
 function generarResumenReconexion() {
     console.log('Generando resumen de reconexión...');
     
@@ -417,9 +429,22 @@ function generarResumenReconexion() {
     
     resumen += `, Predio ${formData.get('predio')}, Color ${formData.get('color')}, Perno ${formData.get('perno')}`;
     
+    // Agregar razón del perno si es "No se coloca"
+    if (formData.get('perno') === 'No se coloca' && formData.get('perno_razon')) {
+        resumen += ` (${formData.get('perno_razon')})`;
+    }
+    
+    // Agregar observación final si existe
+    const observacion = formData.get('observacion');
+    if (observacion && observacion.trim() !== '') {
+        resumen += `, Observación: ${observacion}`;
+    }
+    
     // Mostrar el resumen
     mostrarResumenGenerado(resumen);
 }
+
+
 
 
 // =============================================
@@ -448,6 +473,19 @@ function inicializarFormularioVerificacion() {
                 document.getElementById('abastecimiento-field').classList.add('active');
             } else {
                 document.getElementById('abastecimiento-field').classList.remove('active');
+            }
+        });
+    });
+    
+    // Lógica para "Corte con rotura" - mostrar campo de texto
+    document.querySelectorAll('#formulario-verificacion input[name="reconectado_opcion"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const roturaInput = document.getElementById('rotura-medida');
+            if (this.value === 'Corte con rotura') {
+                roturaInput.style.display = 'inline-block';
+            } else {
+                roturaInput.style.display = 'none';
+                roturaInput.value = '';
             }
         });
     });
@@ -524,6 +562,7 @@ function manejarSeleccionVerificacion(valor) {
     // Ocultar todos los campos condicionales primero
     document.getElementById('cortado-opciones').classList.remove('active');
     document.getElementById('reconectado-opciones').classList.remove('active');
+    document.getElementById('fraude-opciones').classList.remove('active');
     document.getElementById('abastecimiento-field').classList.remove('active');
     
     // Limpiar selecciones cuando se cambia la opción principal
@@ -534,14 +573,20 @@ function manejarSeleccionVerificacion(valor) {
         radio.checked = false;
     });
     
+    // Ocultar campo de medida de rotura
+    document.getElementById('rotura-medida').style.display = 'none';
+    document.getElementById('rotura-medida').value = '';
+    
     // Mostrar el campo condicional correspondiente
     if (valor === 'se encontró cortado') {
         document.getElementById('cortado-opciones').classList.add('active');
     } else if (valor === 'se encontró reconectado') {
         document.getElementById('reconectado-opciones').classList.add('active');
+    } else if (valor === 'se encontró posible fraude') {
+        document.getElementById('fraude-opciones').classList.add('active');
     }
-    // Para "se encontró posible fraude" no mostramos campos adicionales
 }
+
 
 // =============================================
 // FUNCIÓN: GENERAR RESUMEN DE VERIFICACIÓN
@@ -552,7 +597,7 @@ function generarResumenVerificacion() {
     
     const formulario = document.getElementById('inspeccionFormVerificacion');
     
-    // Validar formulario
+    // Validar formulario (excepto campos opcionales como abastecimiento y observación)
     if (!formulario.checkValidity()) {
         alert('Por favor, complete todos los campos requeridos');
         formulario.reportValidity();
@@ -622,7 +667,7 @@ function generarResumenVerificacion() {
         const cortadoOpcion = formData.get('cortado_opcion');
         detalleVerificacion = `se encontró cortado (${cortadoOpcion}`;
         
-        // Si es "Predio habitado, usuario presente" y tiene información de abastecimiento
+        // Si es "Predio habitado, usuario presente" y tiene información de abastecimiento (opcional)
         if (cortadoOpcion === 'Predio habitado, usuario presente' && formData.get('abastecimiento')) {
             detalleVerificacion += `, ${formData.get('abastecimiento')}`;
         }
@@ -631,20 +676,44 @@ function generarResumenVerificacion() {
         
     } else if (tipoVerificacion === 'se encontró reconectado') {
         const reconectadoOpcion = formData.get('reconectado_opcion');
-        detalleVerificacion = `se encontró reconectado (${reconectadoOpcion})`;
+        detalleVerificacion = `se encontró reconectado (${reconectadoOpcion}`;
+        
+        // Si es "Corte con rotura" y tiene medida
+        if (reconectadoOpcion === 'Corte con rotura' && document.getElementById('rotura-medida').value) {
+            detalleVerificacion += ` ${document.getElementById('rotura-medida').value}`;
+        }
+        
+        detalleVerificacion += ')';
         
     } else if (tipoVerificacion === 'se encontró posible fraude') {
-        detalleVerificacion = 'se encontró posible fraude';
+        const fraudeDetalle = formData.get('fraude_detalle');
+        detalleVerificacion = `se encontró posible fraude (Derivar inspección para carro`;
+        
+        if (fraudeDetalle) {
+            detalleVerificacion += `, ${fraudeDetalle}`;
+        }
+        
+        detalleVerificacion += ')';
     }
     
     resumen += `, se procedió a realizar la verificación del corte en donde ${detalleVerificacion}`;
     
     resumen += `, Predio ${formData.get('predio')}, Color ${formData.get('color')}, Perno ${formData.get('perno')}`;
     
+    // Agregar razón del perno si es "No se coloca"
+    if (formData.get('perno') === 'No se coloca' && formData.get('perno_razon')) {
+        resumen += ` (${formData.get('perno_razon')})`;
+    }
+    
+    // Agregar observación final si existe
+    const observacion = formData.get('observacion');
+    if (observacion && observacion.trim() !== '') {
+        resumen += `, Observación: ${observacion}`;
+    }
+    
     // Mostrar el resumen
     mostrarResumenGenerado(resumen);
 }
-
 
 
 // =============================================
@@ -724,6 +793,62 @@ function copiarResumen() {
             alert('Resumen copiado al portapapeles');
         });
 }
+
+
+
+// =============================================
+// INICIALIZACIÓN ADICIONAL PARA PERNO
+// =============================================
+
+function inicializarPerno() {
+    // Para formulario de corte
+    document.querySelectorAll('input[name="perno"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('perno-razon');
+            if (this.value === 'No se coloca') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+                // Limpiar selección de razón
+                document.querySelectorAll('input[name="perno_razon"]').forEach(radioRazon => {
+                    radioRazon.checked = false;
+                });
+            }
+        });
+    });
+    
+    // Para formulario de reconexión
+    document.querySelectorAll('#formulario-reconexion input[name="perno"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('perno-razon-reconexion');
+            if (this.value === 'No se coloca') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+                document.querySelectorAll('#formulario-reconexion input[name="perno_razon"]').forEach(radioRazon => {
+                    radioRazon.checked = false;
+                });
+            }
+        });
+    });
+    
+    // Para formulario de verificación
+    document.querySelectorAll('#formulario-verificacion input[name="perno"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const razonField = document.getElementById('perno-razon-verificacion');
+            if (this.value === 'No se coloca') {
+                razonField.classList.add('active');
+            } else {
+                razonField.classList.remove('active');
+                document.querySelectorAll('#formulario-verificacion input[name="perno_razon"]').forEach(radioRazon => {
+                    radioRazon.checked = false;
+                });
+            }
+        });
+    });
+}
+
+
 
 // =============================================
 // FUNCIÓN: VOLVER AL MENÚ PRINCIPAL

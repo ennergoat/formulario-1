@@ -414,3 +414,46 @@ button {
     display: block;
     animation: fadeIn 0.5s ease;
 }
+
+/* Agregar al final del archivo styles.css */
+
+/* ============================================= */
+/* ESTILOS PARA TEXTAREA DE OBSERVACIÓN */
+/* ============================================= */
+
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: border-color 0.3s;
+    resize: vertical;
+    min-height: 80px;
+}
+
+textarea:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Estilo para campos opcionales */
+label:not(.required) {
+    font-weight: normal;
+}
+
+/* Campo de medida de rotura en verificación */
+#rotura-medida {
+    display: none;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#rotura-medida:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+}
