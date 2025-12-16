@@ -278,7 +278,24 @@
                 </header>
 
                 <form id="inspeccionFormReconexion">
+
+                    <!-- Agregar en formulario-reconexion, antes del div class="buttons" -->
                     <div class="form-section">
+                        <h2>Item de Cobro</h2>
+                        <div class="form-group">
+                            <label for="item-cobro">Seleccione o busque un ítem de cobro:</label>
+                            <input type="text" id="item-cobro" name="item_cobro" list="items-cobro-list" placeholder="Escriba para buscar o seleccionar un ítem">
+                            <datalist id="items-cobro-list">
+                                <!-- Las opciones se generarán dinámicamente con JavaScript -->
+                            </datalist>
+                        </div>
+                    </div>
+
+                    
+
+                    
+                    <div class="form-section">
+                        
                         <h2>Información de la Cuadrilla y Contrato</h2>
 
                         <div class="form-group">
@@ -490,6 +507,8 @@
                             <textarea id="observacion-reconexion" name="observacion" rows="3" placeholder="Escriba cualquier observación adicional"></textarea>
                         </div>
                     </div>
+
+
 
 
 

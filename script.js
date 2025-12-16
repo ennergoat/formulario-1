@@ -181,6 +181,206 @@ function inicializarFormularioCorte() {
     });
 }
 
+
+
+// =============================================
+// DATOS DE ITEMS DE COBRO (PRECIOS OCULTOS)
+// =============================================
+
+const itemsCobro = [
+    { nombre: "Corte del servicio", precio: 0 },
+    { nombre: "Reduccion de caudal", precio: 1.63 },
+    { nombre: "Verificación de corte recuperación de cartera", precio: 0 },
+    { nombre: "Reconexion de servicio (sencillas)", precio: 3.88 },
+    { nombre: "Reconexion efectiva 1-5 meses", precio: 4.14 },
+    { nombre: "Reconexion efectiva 6-10 meses", precio: 8.17 },
+    { nombre: "Reconexion efectiva 11-15 meses", precio: 13.65 },
+    { nombre: "Reconexion efectiva 16-24 meses", precio: 20.17 },
+    { nombre: "Reconexion efectiva 25-40 meses", precio: 29.66 },
+    { nombre: "Reconexion efectiva 41-50 meses", precio: 47.27 },
+    { nombre: "Reconexion efectiva 51-60 meses", precio: 64.90 },
+    { nombre: "Reconexion efectiva 61-80 meses", precio: 96.73 },
+    { nombre: "Reconexion efectiva >= 81 meses", precio: 128.56 },
+    { nombre: "Reubicación por corte y reconexion", precio: 19.33 },
+    { nombre: "Mantenimiento corte y reconexión", precio: 3.33 },
+    { nombre: "Reactivacion del caudal", precio: 1.65 },
+    { nombre: "Verificación de corte integral", precio: 33.51 },
+    { nombre: "Cierre definitivo en sitio por depuracion", precio: 33.19 }
+];
+
+// =============================================
+// INICIALIZACIÓN DEL CAMPO DE ITEM DE COBRO
+// =============================================
+
+function inicializarItemCobro() {
+    const inputItemCobro = document.getElementById('item-cobro');
+    const datalist = document.getElementById('items-cobro-list');
+    
+    if (!inputItemCobro || !datalist) return;
+    
+    // Llenar el datalist con las opciones
+    itemsCobro.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.nombre;
+        // Podemos agregar el precio como data attribute si es necesario
+        option.setAttribute('data-precio', item.precio);
+        datalist.appendChild(option);
+    });
+    
+    // Crear contenedor para sugerencias personalizadas
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.className = 'search-suggestions';
+    suggestionsContainer.id = 'item-cobro-suggestions';
+    inputItemCobro.parentNode.appendChild(suggestionsContainer);
+    
+    // Variables para controlar las sugerencias
+    let currentFocus = -1;
+    let filteredItems = [];
+    
+    // Función para mostrar sugerencias
+    function mostrarSugerencias(texto) {
+        const container = document.getElementById('item-cobro-suggestions');
+        container.innerHTML = '';
+        
+        if (!texto || texto.length < 2) {
+            container.classList.remove('active');
+            return;
+        }
+        
+        // Filtrar items que coincidan con el texto
+        filteredItems = itemsCobro.filter(item => 
+            item.nombre.toLowerCase().includes(texto.toLowerCase())
+        );
+        
+        if (filteredItems.length === 0) {
+            container.classList.remove('active');
+            return;
+        }
+        
+        // Crear elementos de sugerencia
+        filteredItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.textContent = item.nombre;
+            div.setAttribute('data-value', item.nombre);
+            div.setAttribute('data-precio', item.precio);
+            
+            div.addEventListener('click', function() {
+                inputItemCobro.value = this.getAttribute('data-value');
+                container.classList.remove('active');
+                currentFocus = -1;
+                
+                // Guardar el precio seleccionado en un campo oculto
+                const precioSeleccionado = this.getAttribute('data-precio');
+                guardarPrecioSeleccionado(precioSeleccionado);
+            });
+            
+            container.appendChild(div);
+        });
+        
+        container.classList.add('active');
+        currentFocus = -1;
+    }
+    
+    // Función para guardar el precio seleccionado
+    function guardarPrecioSeleccionado(precio) {
+        // Podemos almacenarlo en un campo oculto o en una variable global
+        // Por ahora, lo guardamos en un campo oculto
+        let hiddenInput = document.getElementById('item-cobro-precio-hidden');
+        if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.id = 'item-cobro-precio-hidden';
+            hiddenInput.name = 'item_cobro_precio';
+            inputItemCobro.parentNode.appendChild(hiddenInput);
+        }
+        hiddenInput.value = precio;
+    }
+    
+    // Event listener para input
+    inputItemCobro.addEventListener('input', function() {
+        mostrarSugerencias(this.value);
+        
+        // Si se borra el campo, limpiar el precio
+        if (!this.value) {
+            guardarPrecioSeleccionado('');
+        }
+    });
+    
+    // Event listener para teclas (navegación con flechas)
+    inputItemCobro.addEventListener('keydown', function(e) {
+        const container = document.getElementById('item-cobro-suggestions');
+        if (!container.classList.contains('active')) return;
+        
+        const items = container.getElementsByClassName('suggestion-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentFocus = Math.min(currentFocus + 1, items.length - 1);
+            setActiveSuggestion(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentFocus = Math.max(currentFocus - 1, -1);
+            setActiveSuggestion(items);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocus > -1 && items[currentFocus]) {
+                items[currentFocus].click();
+            }
+        } else if (e.key === 'Escape') {
+            container.classList.remove('active');
+            currentFocus = -1;
+        }
+    });
+    
+    // Función para resaltar la sugerencia activa
+    function setActiveSuggestion(items) {
+        // Remover clase 'highlighted' de todos
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.remove('highlighted');
+        }
+        
+        // Agregar clase 'highlighted' al item activo
+        if (currentFocus > -1 && items[currentFocus]) {
+            items[currentFocus].classList.add('highlighted');
+            // Scroll al elemento activo
+            items[currentFocus].scrollIntoView({ block: 'nearest' });
+        }
+    }
+    
+    // Cerrar sugerencias al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        const container = document.getElementById('item-cobro-suggestions');
+        if (!container.contains(e.target) && e.target !== inputItemCobro) {
+            container.classList.remove('active');
+            currentFocus = -1;
+        }
+    });
+    
+    // También cerrar al seleccionar del datalist nativo
+    inputItemCobro.addEventListener('change', function() {
+        setTimeout(() => {
+            const container = document.getElementById('item-cobro-suggestions');
+            container.classList.remove('active');
+            
+            // Buscar y guardar el precio del item seleccionado
+            const itemSeleccionado = itemsCobro.find(item => 
+                item.nombre === this.value
+            );
+            
+            if (itemSeleccionado) {
+                guardarPrecioSeleccionado(itemSeleccionado.precio);
+            }
+        }, 100);
+    });
+}
+
+
+
+
+
+
+
 // =============================================
 // INICIALIZACIÓN DE FORMULARIO DE RECONEXIÓN
 // =============================================
@@ -256,6 +456,9 @@ function inicializarFormularioReconexion() {
             }
         });
     });
+
+    // Inicializar el campo de ítem de cobro
+    inicializarItemCobro();
     
     console.log('Formulario de reconexión inicializado correctamente');
 }
@@ -434,6 +637,15 @@ function generarResumenReconexion() {
         resumen += ` (${formData.get('perno_razon')})`;
     }
     
+    // Agregar ítem de cobro si existe
+    const itemCobro = formData.get('item_cobro');
+    if (itemCobro && itemCobro.trim() !== '') {
+        resumen += `, Item de cobro: ${itemCobro}`;
+        
+    }
+
+
+
     // Agregar observación final si existe
     const observacion = formData.get('observacion');
     if (observacion && observacion.trim() !== '') {
